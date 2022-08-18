@@ -4,64 +4,61 @@ import logging
 import traceback
 import requests
 from wfs_client import WFSClient
+from os.path import join
 """This is modelled after https://docs.easydb.de/en/technical/plugins/
 section "Example (Server Callback)
 """
 
-SERVICER_URL = "http://servicer:5000"
+DATABASE_CALLBACKS = ['db_pre_update_one',
+                      'db_pre_update',
+                      'db_pre_delete_one',
+                      'db_pre_delete',
+                      'db_post_update_one',
+                      'db_post_update',
+                      'db_post_delete_one',
+                      'db_post_delete']
 
 class ServicerClient:
-    def __init__(self, url):
+    def __init__(self, url, hooks = []):
         if url.startswith('http'):
             self.url = url
         else:
             raise ValueError('Protocol information required in servicer url (e.g. "http:...")')
+        for hook in hooks:
+            def hook_method(self, easydb_context, easydb_info):
+                return self.redirect(hook, easydb_context, easydb_info)
+            setattr(self, hook, hook_method)     
     
     def redirect(self, endpoint, easydb_context, easydb_info):
         session = easydb_context.get_session()
         data = easydb_info.get('data')
-        try:
-            logging.info("\n".join(["Redirecting:", endpoint, str(session), str(data)]))
+        object_type = next(data.keys())
+        if {object_type, '*'}.intersection(object_types):
+            full_url = join(self.url, endpoint, object_type)
+            try:
+                logging.info("\n".join(["Redirecting:", full_url, str(session), str(data)]))
 
-            response = requests.post(self.url + endpoint,
-                                    json={'session': session, "data": data},
-                                    headers={'Content-type': 'application/json'})
+                response = requests.post(full_url,
+                                        json={'session': session, "data": data},
+                                        headers={'Content-type': 'application/json'})
+                
+                if response.ok:
+                    data = response.json()['data']
+                    logging.debug("Servicer returned data: " + json.dumps(data, indent=2))
+                else:
+                    logging.error("Servicer failed with: " + str(response.content))  
+            except Exception as exception:
+                logging.error(str(exception))
             
-            if response.ok:
-                data = response.json()['data']
-                logging.debug("Servicer returned data: " + json.dumps(data, indent=2))
-            else:
-                logging.error("Servicer failed with: " + str(response.content))  
-        except Exception as exception:
-            logging.error(str(exception))
-        finally:
-            return data
+        return data
 
-client = ServicerClient(SERVICER_URL)
+
+client = ServicerClient(settings.SERVICER_URL)
 
 def easydb_server_start(easydb_context):
-    easydb_context.register_callback('db_pre_update', {'callback': 'submit_to_wfs'})
-    # easydb_context.register_callback('db_pre_update', {'callback': 'redirect_to_servicer'})
-    easydb_context.register_callback('db_post_update_one', {'callback': 'extract_shapefiles'})
-
+    for hook in settings.ROUTING.keys():
+        easydb_context.register_callback('hook', {'callback': 'client.' + hook})
+   
     logging.basicConfig(filename="/var/tmp/plugin.log", level=logging.DEBUG)
     logging.info("Loaded plugin")
-
-
-
-def submit_to_wfs(easydb_context, easydb_info):
-    return client.redirect('/pre-update', easydb_context, easydb_info)
-
-def extract_shapefiles(easydb_context, easydb_info):
-    return client.redirect('/post-update', easydb_context, easydb_info)
-
-def minimal_callback(easydb_context, easydb_info):
-    try:
-        # unpack payload and do stuff:
-        info = easydb_info['data']
-        logging.info('Got info: ' + str(info))
-    except Exception as exception:
-        logging.error(str(exception))
-    finally:
-        return info
 
