@@ -19,22 +19,25 @@ DATABASE_CALLBACKS = ['db_pre_update_one',
                       'db_post_delete']
 
 class ServicerClient:
-    def __init__(self, url, hooks = []):
+    def __init__(self, url):
         if url.startswith('http'):
             self.url = url
         else:
             raise ValueError('Protocol information required in servicer url (e.g. "http:...")')
-        for hook in hooks:
+        populated_hooks = settings.ROUTING.keys()
+        for hook in populated_hooks:
             def hook_method(self, easydb_context, easydb_info):
                 return self.redirect(hook, easydb_context, easydb_info)
             setattr(self, hook, hook_method)     
     
-    def redirect(self, endpoint, easydb_context, easydb_info):
+    def redirect(self, hook, easydb_context, easydb_info):
         session = easydb_context.get_session()
         data = easydb_info.get('data')
         object_type = next(data.keys())
-        if {object_type, '*'}.intersection(object_types):
-            full_url = join(self.url, endpoint, object_type)
+        served_types = settings.ROUTING[hook]
+        
+        if {object_type, '*'}.intersection(served_types):
+            full_url = join(self.url, hook, object_type)
             try:
                 logging.info("\n".join(["Redirecting:", full_url, str(session), str(data)]))
 
