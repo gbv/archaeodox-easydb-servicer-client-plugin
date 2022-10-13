@@ -12,4 +12,4 @@ plugin:
     api-version:
       require: 1
 python-2:
-  file: src/server/external_storage.py
+  file: src/server/servicer_client.py
