@@ -19,7 +19,7 @@ base_config:
     group: servicer_client
     parameters:
       servicer_url:
-        type: url
+        type: text
         position: 1
       routing:
         type: text
