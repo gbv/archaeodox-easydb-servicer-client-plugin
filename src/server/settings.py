@@ -1,6 +1,3 @@
-from server.servicer_client import SERVICER_URL
-
-
 OBJECT_TYPE = "teller"
 GEO_SERVER_URL = "http://geoserver:8080/geoserver/wfs"
 GEOMETRY = "found_at"
