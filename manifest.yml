@@ -1,32 +1,15 @@
 plugin:
-  name: custom-data-type-georef
+  name: easydb-servicer-client-plugin
   version: 1.2
-  url: https://github.com/chris-jan-trapp/easydb-custom-data-type-georef
+  url: https://github.com/chris-jan-trapp/easydb-servicer-client-plugin
   displayname:
-    de-DE: georef-Verknüpfung
-    en-US: georef-Referencing
+    de-DE: Servicer-Client
+    en-US: servicer-client
   info:
-    de-DE: Ermöglicht Georeferenzierungen auf einer Karte im geoJSON-Format.
-    en-US: Enables georeferencing on a map in geoJSON format.
+    de-DE: Leitet API Calls zum Servicer um
+    en-US: Redirects API calls to a servicer instance
   server:
     api-version:
       require: 1
-  webfrontend:
-    url: custom-data-type-georef.js
-    l10n: l10n/
-    css: custom-data-type-georef.css
-custom_types:
-  georef:
-    mapping:
-      conceptName:
-        type: text
-      conceptURI:
-        type: text
-    config:
-      schema:
-        - name: mapbox_access_token
-          parameters:
-            value:
-              type: text
 python-2:
   file: src/server/external_storage.py

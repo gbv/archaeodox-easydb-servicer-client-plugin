@@ -89,3 +89,9 @@ class WFSClient:
     def update_feature(self, feature, feature_id):
         data = self.get_update_xml(feature, feature_id)
         response = self.post_transaction(data)
+
+
+if __name__ == '__main__':
+    poly = json.loads('{"coordinates":[[[9.085935854518524,52.18203402064869],[9.087129779093726,52.18275262214302],[9.087879539100962,52.18219548948176],[9.087105891542722,52.181829537063166],[9.085935854518524,52.18203402064869]]],"type":"Polygon"}')
+
+    client = WFSClient('https://geodienste.gbv.de/nld')
