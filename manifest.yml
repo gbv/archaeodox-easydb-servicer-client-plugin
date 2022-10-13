@@ -17,7 +17,7 @@ python-2:
   file: src/server/servicer_client.py
 
 base_config:
-  - name: Servicer-Client
+  - name: servicer_client
     group: servicer_client
     parameters:
       servicer_url:

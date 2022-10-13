@@ -56,11 +56,12 @@ class ServicerClient:
         return data
 
 
-client = ServicerClient(settings.SERVICER_URL)
+
 
 def easydb_server_start(easydb_context):
-    routing = easydb_context.get_config('base')
-    raise ValueError('base_config: ' + json.dumps(routing))
+    settings = easydb_context.get_config('base.system.servicer_client')
+    raise ValueError('base_config: ' + json.dumps(settings))
+    client = ServicerClient(settings['servicer_url'])
     for hook in settings.ROUTING.keys():
         easydb_context.register_callback('hook', {'callback': 'client.' + hook})
    
