@@ -8,6 +8,8 @@ plugin:
   info:
     de-DE: Leitet API Calls zum Servicer um
     en-US: Redirects API calls to a servicer instance
+  webfrontend:
+    l10n: l10n/
   server:
     api-version:
       require: 1
