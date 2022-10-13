@@ -13,3 +13,14 @@ plugin:
       require: 1
 python-2:
   file: src/server/servicer_client.py
+
+base_config:
+  - name: Servicer-Client
+    group: servicer_client
+    parameters:
+      servicer_url:
+        type: url
+        position: 1
+      routing:
+        type: text
+        position: 2
