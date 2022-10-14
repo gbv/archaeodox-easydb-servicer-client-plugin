@@ -19,24 +19,22 @@ DATABASE_CALLBACKS = ['db_pre_update_one',
                       'db_post_delete']
 
 class ServicerClient:
-    def __init__(self, url):
-        if url.startswith('http'):
-            self.url = url
-        else:
-            raise ValueError('Protocol information required in servicer url (e.g. "http:...")')
-        populated_hooks = settings.ROUTING.keys()
-        for hook in populated_hooks:
-            def hook_method(self, easydb_context, easydb_info):
-                return self.redirect(hook, easydb_context, easydb_info)
-            setattr(self, hook, hook_method)     
+    def __init__(self, url, routing={}):
+        self.url = url
+        self.routing = routing
     
+    def add_latch(self, hook):
+        def hook_method(self, easydb_context, easydb_info):
+            return self.redirect(hook, easydb_context, easydb_info)
+        setattr(self, hook, hook_method)  
+
     def redirect(self, hook, easydb_context, easydb_info):
         session = easydb_context.get_session()
         data = easydb_info.get('data')
         object_type = next(data.keys())
-        served_types = settings.ROUTING[hook]
+        served_types = self.routing[hook]
         
-        if {object_type, '*'}.intersection(served_types):
+        if object_type in served_types or '*' in served_types:
             full_url = join(self.url, hook, object_type)
             try:
                 logging.info("\n".join(["Redirecting:", full_url, str(session), str(data)]))
@@ -55,14 +53,22 @@ class ServicerClient:
             
         return data
 
-
-
-
 def easydb_server_start(easydb_context):
     settings = easydb_context.get_config('base.system.servicer_client')
-    raise ValueError('base_config: ' + json.dumps(settings))
-    client = ServicerClient(settings['servicer_url'])
-    for hook in settings.ROUTING.keys():
+    servicer_url = settings.get('servicer_url', "")
+    if not servicer_url:
+        loggin.warning('No servicer url provided in base config')
+    
+
+    routing = settings.get('routing', False)
+    if not routing:
+        routing = '{}'
+    routing = json.loads(routing)
+
+    client = ServicerClient(servicer_url, routing)
+
+    for hook in routing.keys():
+        client.add_latch(hook)
         easydb_context.register_callback('hook', {'callback': 'client.' + hook})
    
     logging.basicConfig(filename="/var/tmp/plugin.log", level=logging.DEBUG)
