@@ -57,7 +57,7 @@ def easydb_server_start(easydb_context):
     settings = easydb_context.get_config('base.system.servicer_client')
     servicer_url = settings.get('servicer_url', "")
     if not servicer_url:
-        loggin.warning('No servicer url provided in base config')
+        logging.warning('No servicer url provided in base config')
     
 
     routing = settings.get('routing', False)
