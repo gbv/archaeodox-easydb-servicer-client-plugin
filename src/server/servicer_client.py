@@ -18,16 +18,6 @@ DATABASE_CALLBACKS = ['db_pre_update_one',
                       'db_post_delete']
 
 class ServicerClient:
-    def __init__(self):
-        self.latches = {'db_pre_update_one': self.db_pre_update_one,
-                        'db_pre_update': self.db_pre_update,
-                        'db_pre_delete_one': self.db_pre_delete_one,
-                        'db_pre_delete': self.db_pre_delete,
-                        'db_post_update_one': self.db_post_update_one,
-                        'db_post_update': self.db_post_update,
-                        'db_post_delete_one': self.db_post_delete_one,
-                        'db_post_delete': self.db_post_delete}
-
     def configure(self, url, routing, logger):
         self.logger = logger
         self.url = url
