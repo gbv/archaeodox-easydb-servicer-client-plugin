@@ -18,11 +18,7 @@ DATABASE_CALLBACKS = ['db_pre_update_one',
                       'db_post_delete']
 
 class ServicerClient:
-    def __init__(self, url, routing={}, logger=None):
-        self.url = url
-        self.routing = routing
-        self.logger = logger
-        self.logger.info('Instanciated client')
+    def __init__(self):
         self.latches = {'db_pre_update_one': self.db_pre_update_one,
                         'db_pre_update': self.db_pre_update,
                         'db_pre_delete_one': self.db_pre_delete_one,
@@ -31,6 +27,12 @@ class ServicerClient:
                         'db_post_update': self.db_post_update,
                         'db_post_delete_one': self.db_post_delete_one,
                         'db_post_delete': self.db_post_delete}
+
+    def configure(self, url, routing, logger):
+        self.logger = logger
+        self.url = url
+        self.routing = routing
+        self.logger.info('Added URL and routing,')
 
     def db_pre_update_one(self, easydb_context, easydb_info):
         return self.redirect('db_pre_update_one', easydb_context, easydb_info)
@@ -87,6 +89,10 @@ class ServicerClient:
             
         return data
 
+
+
+client = ServicerClient()
+
 def latch_db_pre_update_one(easydb_context, easydb_info):
     return client.db_pre_update_one(easydb_context, easydb_info)
         
@@ -117,14 +123,13 @@ def easydb_server_start(easydb_context):
     logger = easydb_context.get_logger('pf.server.plugin.servicer')
     if not servicer_url:
         logger.warning('No servicer url provided in base config')
-    
 
     routing = settings.get('routing', False)
     if not routing:
         routing = '{}'
     routing = json.loads(routing)
 
-    client = ServicerClient(servicer_url, routing, logger)
+    client.configure(servicer_url, routing, logger)
 
     for hook in routing.keys():
         easydb_context.register_callback(hook, {'callback': 'latch_' + hook})
