@@ -72,7 +72,7 @@ def easydb_server_start(easydb_context):
 
     for hook in routing.keys():
         client.add_latch(hook)
-        easydb_context.register_callback('hook', {'callback': 'client.' + hook})
+        easydb_context.register_callback(hook, {'callback': 'client.' + hook})
 
    
 
