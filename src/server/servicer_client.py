@@ -27,14 +27,15 @@ class ServicerClient:
     def add_latch(self, hook):
         def hook_method(self, easydb_context, easydb_info):
             return self.redirect(hook, easydb_context, easydb_info)
-        setattr(self, hook, hook_method)  
+        setattr(self, hook, hook_method)
+        self.logger.info(f'Latched onto {hook}.')
 
     def redirect(self, hook, easydb_context, easydb_info):
         session = easydb_context.get_session()
         data = easydb_info.get('data')
         object_type = next(data.keys())
         served_types = self.routing[hook]
-        
+        self.logger.debug(f'Looking for redirect for {object_type} in {hook}.')
         if object_type in served_types or '*' in served_types:
             full_url = join(self.url, hook, object_type)
             try:
@@ -72,5 +73,6 @@ def easydb_server_start(easydb_context):
     for hook in routing.keys():
         client.add_latch(hook)
         easydb_context.register_callback('hook', {'callback': 'client.' + hook})
+
    
 
