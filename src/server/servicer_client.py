@@ -1,6 +1,5 @@
 import json
 import settings
-import logging
 import traceback
 import requests
 from wfs_client import WFSClient
@@ -19,9 +18,11 @@ DATABASE_CALLBACKS = ['db_pre_update_one',
                       'db_post_delete']
 
 class ServicerClient:
-    def __init__(self, url, routing={}):
+    def __init__(self, url, routing={}, logger=None):
         self.url = url
         self.routing = routing
+        self.logger = logger
+        self.logger.info('Instanciated client')
     
     def add_latch(self, hook):
         def hook_method(self, easydb_context, easydb_info):
@@ -37,7 +38,7 @@ class ServicerClient:
         if object_type in served_types or '*' in served_types:
             full_url = join(self.url, hook, object_type)
             try:
-                logging.info("\n".join(["Redirecting:", full_url, str(session), str(data)]))
+                self.logger.info("\n".join(["Redirecting:", full_url, str(session), str(data)]))
 
                 response = requests.post(full_url,
                                         json={'session': session, "data": data},
@@ -45,19 +46,20 @@ class ServicerClient:
                 
                 if response.ok:
                     data = response.json()['data']
-                    logging.debug("Servicer returned data: " + json.dumps(data, indent=2))
+                    self.logger.debug("Servicer returned data: " + json.dumps(data, indent=2))
                 else:
-                    logging.error("Servicer failed with: " + str(response.content))  
+                    self.logger.error("Servicer failed with: " + str(response.content))  
             except Exception as exception:
-                logging.error(str(exception))
+                self.logger.error(str(exception))
             
         return data
 
 def easydb_server_start(easydb_context):
     settings = easydb_context.get_config('base.system.servicer_client')
     servicer_url = settings.get('servicer_url', "")
+    logger = easydb_context.get_logger('Servicer_client')
     if not servicer_url:
-        logging.warning('No servicer url provided in base config')
+        logger.warning('No servicer url provided in base config')
     
 
     routing = settings.get('routing', False)
@@ -65,12 +67,10 @@ def easydb_server_start(easydb_context):
         routing = '{}'
     routing = json.loads(routing)
 
-    client = ServicerClient(servicer_url, routing)
+    client = ServicerClient(servicer_url, routing, logger)
 
     for hook in routing.keys():
         client.add_latch(hook)
         easydb_context.register_callback('hook', {'callback': 'client.' + hook})
    
-    logging.basicConfig(filename="/var/tmp/plugin.log", level=logging.DEBUG)
-    logging.info("Loaded plugin")
 
