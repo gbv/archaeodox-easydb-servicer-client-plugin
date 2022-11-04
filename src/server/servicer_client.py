@@ -23,39 +23,13 @@ class ServicerClient:
         self.routing = routing
         self.logger = logger
         self.logger.info('Instanciated client')
-        self.latches = {'db_pre_update_one': self.latch_db_pre_update_one,
-                        'db_pre_update': self.latch_db_pre_update,
-                        'db_pre_delete_one': self.latch_db_pre_delete_one,
-                        'db_pre_delete': self.latch_db_pre_delete,
-                        'db_post_update_one': self.latch_db_post_update_one,
-                        'db_post_update': self.latch_db_post_update,
-                        'db_post_delete_one': self.latch_db_post_delete_one,
-                        'db_post_delete': self.latch_db_post_delete}
+    
+    def add_latch(self, hook):
+        def hook_method(self, easydb_context, easydb_info):
+            return self.redirect(hook, easydb_context, easydb_info)
+        setattr(self, hook, hook_method)
+        self.logger.info(f'Latched onto {hook}.')
 
-    def latch_db_pre_update_one(self, easydb_context, easydb_info):
-        return self.redirect('db_pre_update_one', easydb_context, easydb_info)
-    
-    def latch_db_pre_update(self, easydb_context, easydb_info):
-        return self.redirect('db_pre_update', easydb_context, easydb_info)
-    
-    def latch_db_pre_delete_one(self, easydb_context, easydb_info):
-        return self.redirect('db_pre_delete_one', easydb_context, easydb_info)
-    
-    def latch_db_pre_delete(self, easydb_context, easydb_info):
-        return self.redirect('db_pre_delete', easydb_context, easydb_info)
-    
-    def latch_db_post_update_one(self, easydb_context, easydb_info):
-        return self.redirect('db_post_update_one', easydb_context, easydb_info)
-    
-    def latch_db_post_update(self, easydb_context, easydb_info):
-        return self.redirect('db_post_update', easydb_context, easydb_info)
-    
-    def latch_db_post_delete_one(self, easydb_context, easydb_info):
-        return self.redirect('db_post_delete_one', easydb_context, easydb_info)
-    
-    def latch_db_post_delete(self, easydb_context, easydb_info):
-        return self.redirect('db_post_delete', easydb_context, easydb_info)
-    
     def redirect(self, hook, easydb_context, easydb_info):
         session = easydb_context.get_session()
         data = easydb_info.get('data')
@@ -97,5 +71,8 @@ def easydb_server_start(easydb_context):
     client = ServicerClient(servicer_url, routing, logger)
 
     for hook in routing.keys():
-        easydb_context.register_callback(hook, {'callback': client.latches[hook]})
+        client.add_latch(hook)
+        easydb_context.register_callback('hook', {'callback': 'client.' + hook})
+
+   
 
