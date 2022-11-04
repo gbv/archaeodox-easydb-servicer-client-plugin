@@ -54,7 +54,6 @@ class ServicerClient:
         return data
 
 def easydb_server_start(easydb_context):
-    raise Exception('Cry for help')
     settings = easydb_context.get_config('base.system.servicer_client')
     servicer_url = settings.get('servicer_url', "")
     if not servicer_url:
