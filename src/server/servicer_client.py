@@ -67,7 +67,7 @@ class ServicerClient:
     def redirect(self, hook, easydb_context, easydb_info):
         session = easydb_context.get_session()
         data = easydb_info.get('data')
-        self.logger.debug(json.dumps(data, indent=2))
+        self.logger.debug(str(data))
         object_type = next(data.keys())
         served_types = self.routing[hook]
         self.logger.debug(f'Looking for redirect for {object_type} in {hook}.')
