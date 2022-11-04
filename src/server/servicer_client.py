@@ -87,6 +87,30 @@ class ServicerClient:
             
         return data
 
+def latch_db_pre_update_one(easydb_context, easydb_info):
+    return client.db_pre_update_one(easydb_context, easydb_info)
+        
+def latch_db_pre_update(easydb_context, easydb_info):
+    return client.db_pre_update(easydb_context, easydb_info)
+        
+def latch_db_pre_delete_one(easydb_context, easydb_info):
+    return client.db_pre_delete_one(easydb_context, easydb_info)
+        
+def latch_db_pre_delete(easydb_context, easydb_info):
+    return client.db_pre_delete(easydb_context, easydb_info)
+        
+def latch_db_post_update_one(easydb_context, easydb_info):
+    return client.db_post_update_one(easydb_context, easydb_info)
+        
+def latch_db_post_update(easydb_context, easydb_info):
+    return client.db_post_update(easydb_context, easydb_info)
+        
+def latch_db_post_delete_one(easydb_context, easydb_info):
+    return client.db_post_delete_one(easydb_context, easydb_info)
+        
+def latch_db_post_delete(easydb_context, easydb_info):
+    return client.db_post_delete(easydb_context, easydb_info)
+        
 def easydb_server_start(easydb_context):
     settings = easydb_context.get_config('base.system.servicer_client')
     servicer_url = settings.get('servicer_url', "")
@@ -103,8 +127,7 @@ def easydb_server_start(easydb_context):
     client = ServicerClient(servicer_url, routing, logger)
 
     for hook in routing.keys():
-        client.add_latch(hook)
-        easydb_context.register_callback(hook, {'callback': client.latches[hook]})
+        easydb_context.register_callback(hook, {'callback': 'latch_' + hook})
 
    
 
