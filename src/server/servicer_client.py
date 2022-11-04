@@ -57,7 +57,7 @@ class ServicerClient:
 def easydb_server_start(easydb_context):
     settings = easydb_context.get_config('base.system.servicer_client')
     servicer_url = settings.get('servicer_url', "")
-    logger = easydb_context.get_logger('Servicer_client')
+    logger = easydb_context.get_logger('pf.server.plugin.servicer')
     if not servicer_url:
         logger.warning('No servicer url provided in base config')
     
