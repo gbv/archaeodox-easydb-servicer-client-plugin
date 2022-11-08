@@ -31,6 +31,7 @@ def redirect(hook, easydb_context, easydb_info):
     logger.debug('Latching into ' + hook)
     
     logger.debug(str(data))
+    return data
     object_type = next(data)
     served_types = routing[hook]
     logger.debug(f'Looking for redirect for {object_type} in {hook}.')
