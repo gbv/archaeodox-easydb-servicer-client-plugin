@@ -4,6 +4,8 @@ import traceback
 import requests
 from wfs_client import WFSClient
 from os.path import join
+import logging
+
 """This is modelled after https://docs.easydb.de/en/technical/plugins/
 section "Example (Server Callback)
 """
@@ -17,8 +19,21 @@ DATABASE_CALLBACKS = ['db_pre_update_one',
                       'db_post_delete_one',
                       'db_post_delete']
 
+
+client_logger = logging.getLogger('servicer_client')
+client_logger.setLevel(logging.DEBUG)
+
+handler = logging.handlers.RotatingFileHandler('/var/log/servicer_client.log', maxBytes=2048, backupCount=1)
+handler.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
+client_logger.addHandler(handler)
+
+
 def redirect(hook, easydb_context, easydb_info):
-    logger = easydb_context.get_logger('pf.server.plugin.servicer')
+    logger = client_logger
     settings = easydb_context.get_config('base.system.servicer_client')
     session = easydb_context.get_session()
     data = easydb_info.get('data')
