@@ -17,7 +17,7 @@ DATABASE_CALLBACKS = ['db_pre_update_one',
                       'db_post_delete_one',
                       'db_post_delete']
 
-def redirect(self, hook, easydb_context, easydb_info):
+def redirect(hook, easydb_context, easydb_info):
     logger = easydb_context.get_logger('pf.server.plugin.servicer')
     settings = easydb_context.get_config('base.system.servicer_client')
     session = easydb_context.get_session()
