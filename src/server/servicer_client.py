@@ -25,6 +25,7 @@ class ServicerClient:
         self.logger.info('Added URL and routing,')
     
     def redirect(self, hook, easydb_context, easydb_info):
+        self.logger.debug('Latching into ' + hook)
         session = easydb_context.get_session()
         data = easydb_info.get('data')
         self.logger.debug(str(data))
