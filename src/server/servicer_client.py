@@ -5,6 +5,7 @@ import requests
 from wfs_client import WFSClient
 from os.path import join
 import logging
+import logging.handlers
 
 """This is modelled after https://docs.easydb.de/en/technical/plugins/
 section "Example (Server Callback)
