@@ -31,6 +31,8 @@ def redirect(hook, easydb_context, easydb_info):
     logger.debug('Latching into ' + hook)
     
     logger.debug(str(data))
+    with open('/var/tmp/data.json', 'w') as out_file:
+        json.dump(data, out_file)
     return data
     object_type = next(data)
     served_types = routing[hook]
