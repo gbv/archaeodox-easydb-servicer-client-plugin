@@ -55,9 +55,9 @@ def redirect(hook, easydb_context, easydb_info):
     
     
     if isinstance(data, list):
-        object_type = data[0].keys()[0]
+        object_type = next(data[0].keys())
     else:
-        object_type = data.keys()[0]
+        object_type = next(data.keys())
     
     served_types = routing[hook]
     logger.debug(f'Looking for redirect for {object_type} in {hook}.')
@@ -76,7 +76,7 @@ def redirect(hook, easydb_context, easydb_info):
             else:
                 logger.error("Servicer failed with: " + str(response.content))  
         except Exception as exception:
-            logger.error(str(exception))
+            logger.exception(exception)
     return data
 
 
