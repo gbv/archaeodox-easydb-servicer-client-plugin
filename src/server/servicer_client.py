@@ -54,7 +54,7 @@ def redirect(hook, easydb_context, easydb_info):
         object_type = list(data.keys())[0]
     
     served_types = routing[hook]
-    logger.debug(f'Looking for redirect for {object_type} in {hook}.')
+    logger.debug(f'Looking for redirect for {object_type}/{hook} in {served_types}.')
     if object_type in served_types or '*' in served_types:
         full_url = join(servicer_url, hook, object_type)
         try:
