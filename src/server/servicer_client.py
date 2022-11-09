@@ -49,8 +49,16 @@ def redirect(hook, easydb_context, easydb_info):
     logger.debug(str(data))
     with open('/var/tmp/data.json', 'w') as out_file:
         json.dump(data, out_file)
-    return data
-    object_type = next(data)
+    
+    def query_servicer(object_type, hook, data):
+        pass
+    
+    
+    if isinstance(data, list):
+        object_type = data[0].keys()[0]
+    else:
+        object_type = data.keys()[0]
+    
     served_types = routing[hook]
     logger.debug(f'Looking for redirect for {object_type} in {hook}.')
     if object_type in served_types or '*' in served_types:
@@ -69,8 +77,8 @@ def redirect(hook, easydb_context, easydb_info):
                 logger.error("Servicer failed with: " + str(response.content))  
         except Exception as exception:
             logger.error(str(exception))
-        
     return data
+
 
 def latch_db_pre_update_one(easydb_context, easydb_info):
     return redirect('db_pre_update_one', easydb_context, easydb_info)
