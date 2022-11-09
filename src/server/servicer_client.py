@@ -55,9 +55,9 @@ def redirect(hook, easydb_context, easydb_info):
     
     
     if isinstance(data, list):
-        object_type = next(data[0].keys())
+        object_type = list(data[0].keys())[0]
     else:
-        object_type = next(data.keys())
+        object_type = list(data.keys())[0]
     
     served_types = routing[hook]
     logger.debug(f'Looking for redirect for {object_type} in {hook}.')
