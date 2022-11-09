@@ -44,15 +44,9 @@ def redirect(hook, easydb_context, easydb_info):
     routing_json = settings.get('routing',  '{}')
     routing = json.loads(routing_json)
 
-    logger.debug('Latching into ' + hook)
-    
-    logger.debug(str(data))
+    logger.debug('For ' + hook + ': ' + str(data))
     with open('/var/tmp/data.json', 'w') as out_file:
         json.dump(data, out_file)
-    
-    def query_servicer(object_type, hook, data):
-        pass
-    
     
     if isinstance(data, list):
         object_type = list(data[0].keys())[0]
