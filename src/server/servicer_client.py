@@ -24,7 +24,7 @@ DATABASE_CALLBACKS = ['db_pre_update_one',
 client_logger = logging.getLogger('servicer_client')
 client_logger.setLevel(logging.DEBUG)
 
-handler = logging.handlers.RotatingFileHandler('/var/log/servicer_client.log', maxBytes=2048, backupCount=1)
+handler = logging.handlers.RotatingFileHandler('/var/log/servicer_client.log', maxBytes=4194304, backupCount=1)
 handler.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -57,12 +57,11 @@ def redirect(hook, easydb_context, easydb_info):
     logger.debug(f'Looking for redirect for {object_type}/{hook} in {served_types}.')
     if object_type in served_types or '*' in served_types:
         full_url = join(servicer_url, hook, object_type)
+        logger.info("\n".join(["Redirecting:", full_url, str(session), str(data)]))
         try:
-            logger.info("\n".join(["Redirecting:", full_url, str(session), str(data)]))
-
             response = requests.post(full_url,
-                                    json={'session': session, "data": data},
-                                    headers={'Content-type': 'application/json'})
+                                     json={'session': session, "data": data},
+                                     headers={'Content-type': 'application/json'})
             
             if response.ok:
                 data = response.json()['data']
