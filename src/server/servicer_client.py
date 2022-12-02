@@ -105,7 +105,10 @@ def easydb_server_start(easydb_context):
         logger.info('No servicer url provided in base config')
 
     rules = settings.get('routing', '{}')
-    routing = json.loads(rules)
+    try:
+        routing = json.loads(rules)
+    except Exception as exception:
+        logger.info('Failed to load routing from: ' + rules)
 
     for hook in routing.keys():
         latch = 'latch_' + hook
