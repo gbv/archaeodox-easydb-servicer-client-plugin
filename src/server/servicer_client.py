@@ -102,7 +102,7 @@ def easydb_server_start(easydb_context):
     servicer_url = settings.get('servicer_url', "")
     logger = easydb_context.get_logger('pf.server.plugin.servicer')
     if not servicer_url:
-        logger.warning('No servicer url provided in base config')
+        logger.info('No servicer url provided in base config')
 
     rules = settings.get('routing', '{}')
     routing = json.loads(rules)
