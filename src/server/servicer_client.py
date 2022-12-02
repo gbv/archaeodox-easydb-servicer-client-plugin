@@ -109,6 +109,7 @@ def easydb_server_start(easydb_context):
         routing = json.loads(rules)
     except Exception as exception:
         logger.info('Failed to load routing from: ' + rules)
+        return
 
     for hook in routing.keys():
         latch = 'latch_' + hook
