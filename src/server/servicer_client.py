@@ -57,7 +57,7 @@ def redirect(hook, easydb_context, easydb_info):
     logger.debug(f'Looking for redirect for {object_type}/{hook} in {served_types}.')
     if object_type in served_types or '*' in served_types:
         full_url = join(servicer_url, hook, object_type)
-        logger.info("Redirecting to:", full_url)
+        logger.info("Redirecting to:" + full_url)
         try:
             response = requests.post(full_url,
                                      json={'session': session, "data": data},
