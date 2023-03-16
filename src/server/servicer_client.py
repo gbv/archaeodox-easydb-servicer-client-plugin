@@ -21,7 +21,7 @@ def redirect(hook, easydb_context, easydb_info):
     session = easydb_context.get_session()
     data = easydb_info.get('data')
 
-    servicer_url = settings.get('servicer_url', "")
+    servicer_url = settings.get('servicer_url', '')
     
     routing_json = settings.get('routing',  '{}')
     routing = json.loads(routing_json)
@@ -39,17 +39,17 @@ def redirect(hook, easydb_context, easydb_info):
     logger.debug(f'Looking for redirect for {object_type}/{hook} in {served_types}.')
     if object_type in served_types or '*' in served_types:
         full_url = join(servicer_url, hook, object_type)
-        logger.info("Redirecting to:" + full_url)
+        logger.info('Redirecting to: ' + full_url)
         try:
             response = requests.post(full_url,
-                                     json={'session': session, "data": data},
+                                     json={ 'session': session, 'data': data },
                                      headers={'Content-type': 'application/json'})
             
             if response.ok:
                 data = response.json()['data']
-                logger.debug("Servicer returned data: " + json.dumps(data, indent=2))
+                logger.debug('Servicer returned data: ' + json.dumps(data, indent=2))
             else:
-                logger.error("Servicer failed with: " + str(response.content))  
+                logger.error('Servicer failed with: ' + str(response.content))  
         except Exception as exception:
             logger.exception(exception)
     return data
@@ -81,7 +81,7 @@ def latch_db_post_delete(easydb_context, easydb_info):
         
 def easydb_server_start(easydb_context):
     settings = easydb_context.get_config('base.system.servicer_client')
-    servicer_url = settings.get('servicer_url', "")
+    servicer_url = settings.get('servicer_url', '')
     logger = easydb_context.get_logger('pf.server.plugin.servicer')
     if not servicer_url:
         logger.info('No servicer url provided in base config')
