@@ -4,7 +4,6 @@ PLUGIN_PATH =
 INSTALL_FILES = \
 	src/server/servicer.client.py \
 	src/server/settings.py \
-	src/server/wfs_client.py \
 	manifest.yml \
 	$(WEB)/l10n/cultures.json \
 	$(WEB)/l10n/de-DE.json \
