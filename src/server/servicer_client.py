@@ -1,14 +1,8 @@
-import json
-import settings
-import traceback
-import requests
-from wfs_client import WFSClient
+import json, requests
 from os.path import join
-import logging
-import logging.handlers
 
 """This is modelled after https://docs.easydb.de/en/technical/plugins/
-section "Example (Server Callback)
+section "Example (Server Callback)"
 """
 
 DATABASE_CALLBACKS = ['db_pre_update_one',
