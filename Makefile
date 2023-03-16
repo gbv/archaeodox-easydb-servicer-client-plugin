@@ -3,7 +3,6 @@ PLUGIN_NAME = servicer-client
 PLUGIN_PATH = 
 INSTALL_FILES = \
 	src/server/servicer.client.py \
-	src/server/settings.py \
 	manifest.yml \
 	$(WEB)/l10n/cultures.json \
 	$(WEB)/l10n/de-DE.json \
