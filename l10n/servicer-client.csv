@@ -1,6 +1,6 @@
 key,de-DE,en-US
-server.config.group.system.servicer_client.title,Servicer Client,Servicer Client
+server.config.group.system.servicer_client.title,Servicer-Client,Servicer Client
 server.config.parameter.system.servicer_client.routing.label, Routing, Routing
-server.config.parameter.system.servicer_client.servicer_url.label, Servicer URL, Servicer URL
-server.config.group.system.servicer_client.introduction, Parameter für den Betrieb des Servicer Clients, Servicer client operational parameters
-server.config.name.system.servicer_client, Url und Routing, URL and routing
+server.config.parameter.system.servicer_client.servicer_url.label, Servicer-URL, Servicer URL
+server.config.group.system.servicer_client.introduction, Parameter für den Betrieb des Servicer-Clients, Servicer client operational parameters
+server.config.name.system.servicer_client, URL und Routing, URL and routing

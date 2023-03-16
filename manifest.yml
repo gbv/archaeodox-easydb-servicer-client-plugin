@@ -4,9 +4,9 @@ plugin:
   url: https://github.com/chris-jan-trapp/easydb-servicer-client-plugin
   displayname:
     de-DE: Servicer-Client
-    en-US: servicer-client
+    en-US: Servicer client
   info:
-    de-DE: Leitet API Calls zum Servicer um
+    de-DE: Leitet API-Calls zum Servicer um
     en-US: Redirects API calls to a servicer instance
   webfrontend:
     l10n: l10n/
