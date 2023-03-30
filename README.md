@@ -1,18 +1,26 @@
-# Easydb Servicer Client
+# archaeoDox EasyDB Servicer Client
 
-This plugin allows you to redirect easydb [server callbacks](https://docs.easydb.de/en/technical/plugins/#server-callbacks) to an external [servicer instance](https://github.com/chris-jan-trapp/flask_servicer).
-It allows to route individual callbacks for each data type.
+This plugin is part of the archaeoDox system and allows redirecting EasyDB [server callbacks](https://docs.easydb.de/en/technical/plugins/#server-callbacks) to an external [servicer instance](https://github.com/gbv/archaeodox-easydb-servicer-client-plugin).
+It allows to route individual callbacks for each object type.
 
-# Requirements
+# Installation
 
-**NOTE** This guy contains the programmfabrik easydb-library as submodule. If `make`ing the l10n fails after cloning this repo, you need to initialize the submodule by:
+1. Go to the EasyDB plugin directory and clone this repository.
+
+2. Load the submodule [easydb-library](https://github.com/programmfabrik/easydb-library):
 
 ```
 git submodule update --init --recursive
 ```
 
-Or you can do the initial cloning via
+3. Create translation files:
 
 ```
-git clone --recursive https://github.com/gbv/archaeodox-easydb-servicer-client-plugin.git
+make .
+```
+
+4. Restart EasyDB:
+
+```
+docker restart easydb-server
 ```
