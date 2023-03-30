@@ -1,6 +1,6 @@
 # archaeoDox EasyDB Servicer Client
 
-This plugin is part of the archaeoDox system and allows redirecting EasyDB [server callbacks](https://docs.easydb.de/en/technical/plugins/#server-callbacks) to an external [servicer instance](https://github.com/gbv/archaeodox-easydb-servicer-client-plugin).
+This plugin is part of the archaeoDox system and allows redirecting EasyDB [server callbacks](https://docs.easydb.de/en/technical/plugins/#server-callbacks) to an external [servicer instance](https://github.com/gbv/archaeodox-servicer).
 It allows to route individual callbacks for each object type.
 
 # Installation
